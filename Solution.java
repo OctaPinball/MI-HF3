@@ -39,43 +39,38 @@ public class Solution{
                 int rightTrue = 0;
                 int rightFalse = 0;
 
-                for(int k = 0; k < features.length; k++)
-                {
+                for(int k = 0; k < features.length; k++) {
                     //left
-                    if(features[k][j] < features[i][j])
-                    {
+                    if (features[k][j] < features[i][j]) {
                         left[leftSize] = features[k][j];
                         leftSize++;
-                        if(labels[k])
-                        {
+                        if (labels[k]) {
                             leftTrue++;
-                        }
-                        else
-                        {
+                        } else {
                             leftFalse++;
                         }
                     }
 
                     //right
-                    if(features[k][j] >= features[i][j])
-                    {
+                    if (features[k][j] >= features[i][j]) {
                         right[leftSize] = features[k][j];
                         rightSize++;
-                        if(labels[k])
-                        {
+                        if (labels[k]) {
                             rightTrue++;
-                        }
-                        else
-                        {
+                        } else {
                             rightFalse++;
                         }
                     }
-                    double entropy = getEntropy(leftTrue, leftFalse) * ((double)leftSize / (leftSize + rightSize)) + getEntropy(rightTrue, rightFalse) * ((double)rightSize / (rightSize + leftSize));
-                    if(entropy < bestEntropy || bestEntropy == -1)
-                    {
-                        bestEntropy = entropy;
-                        answer = new int[]{j, features[i][j]};
-                    }
+                }
+
+                if(rightSize == 0 && leftSize == 0)
+                    break;
+
+                double entropy = getEntropy(leftTrue, leftFalse) * ((double)leftSize / (leftSize + rightSize)) + getEntropy(rightTrue, rightFalse) * ((double)rightSize / (rightSize + leftSize));
+                if(entropy < bestEntropy || bestEntropy == -1)
+                {
+                    bestEntropy = entropy;
+                    answer = new int[]{j, features[i][j]};
                 }
             }
         }
