@@ -1,5 +1,23 @@
 public class Solution{
 
+    public class Node{
+        public int index;
+        public double threshold;
+        public Node left;
+        public Node right;
+        public double infoGain;
+        public double value;
+
+        public Node(int index, double threshold, Node left, Node right, double infoGain, double value) {
+            this.index = index;
+            this.threshold = threshold;
+            this.left = left;
+            this.right = right;
+            this.infoGain = infoGain;
+            this.value = value;
+        }
+    }
+
 
     public static double getEntropy(int nCat1, int nCat2){
         if(nCat1 == 0 || nCat2 == 0)
@@ -29,12 +47,12 @@ public class Solution{
         {
             for(int j = 0; j < features[i].length; j++)
             {
-                int left[] = new int[features.length];
+                int[] left = new int[features.length];
                 int leftSize = 0;
                 int leftTrue = 0;
                 int leftFalse = 0;
 
-                int right[] = new int[features.length];
+                int[] right = new int[features.length];
                 int rightSize = 0;
                 int rightTrue = 0;
                 int rightFalse = 0;
@@ -76,6 +94,10 @@ public class Solution{
         }
 
         return answer;
+    }
+
+    public static void buildTree(int[][] dataset, int depth){
+        
     }
 
     public static void main(String[] args){
