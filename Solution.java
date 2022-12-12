@@ -24,7 +24,7 @@ public class Solution{
 */
     public static int[] getBestSeparation(int[][] features, boolean[] labels){
         int[] answer = {0,0};
-        double bestEntropy = -1;
+        double bestInfoGain = -99999999;
         for(int i = 0; i < features.length; i++)
         {
             for(int j = 0; j < features[i].length; j++)
@@ -66,10 +66,10 @@ public class Solution{
                 if(rightSize == 0 && leftSize == 0)
                     break;
 
-                double entropy = getEntropy(leftTrue, leftFalse) * ((double)leftSize / (leftSize + rightSize)) + getEntropy(rightTrue, rightFalse) * ((double)rightSize / (rightSize + leftSize));
-                if(entropy < bestEntropy || bestEntropy == -1)
+                double infoGain = getEntropy(leftFalse + rightFalse, leftTrue + rightTrue) - (getEntropy(leftTrue, leftFalse) * ((double)leftSize / (leftSize + rightSize)) + getEntropy(rightTrue, rightFalse) * ((double)rightSize / (rightSize + leftSize)));
+                if(infoGain > bestInfoGain)
                 {
-                    bestEntropy = entropy;
+                    bestInfoGain = infoGain;
                     answer = new int[]{j, features[i][j]};
                 }
             }
