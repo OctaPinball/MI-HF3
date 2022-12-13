@@ -69,7 +69,7 @@ public class Solution{
 
         for(int k = 0; k < data.length; k++) {
             //left
-            if (data[k][idx] < threshold) {
+            if (data[k][idx] <= threshold) {
                 leftSize++;
                 if (labels[k]) {
                     leftTrue++;
@@ -79,7 +79,7 @@ public class Solution{
             }
 
             //right
-            if (data[k][idx] >= threshold) {
+            if (data[k][idx] > threshold) {
                 rightSize++;
                 if (labels[k]) {
                     rightTrue++;
@@ -123,7 +123,17 @@ public class Solution{
         System.out.println(infoGain);
     }
 
+    public void testSeparation(){
+        int[][] tabla = {{5}, {2}, {4}, {3},{0}, {1}};
+        boolean[] bool = {false, true, false, true, true, true};
+        int[] eredmeny = getBestSeparation(tabla, bool);
+        System.out.println(eredmeny[0]);
+        System.out.println(eredmeny[1]);
+    }
+
     public static void main(String[] args) {
+
+        //Read
         List<List<String>> records = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("train.csv"))) {
             String line;
@@ -135,13 +145,14 @@ public class Solution{
             throw new RuntimeException(e);
         }
 
-        int[][] feautures = new int[records.size()][records.get(0).size() - 2];
+        //Load
+        int[][] features = new int[records.size()][records.get(0).size() - 2];
         boolean[] labels = new boolean[records.size()];
         for(int i = 0; i < records.size(); i++)
         {
             for(int j = 0; j < records.get(i).size() - 2; j++)
             {
-                feautures[i][j] = Integer.parseInt(records.get(i).get(j));
+                features[i][j] = Integer.parseInt(records.get(i).get(j));
             }
 
             int num = Integer.parseInt(records.get(i).get(records.get(i).size() - 1));
@@ -154,5 +165,6 @@ public class Solution{
                 labels[i] = false;
             }
         }
+
     }
 }
