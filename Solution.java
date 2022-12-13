@@ -1,6 +1,15 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Solution{
 
     static final int MAX_DEPTH = 10;
+    private static final String COMMA_DELIMITER = ",";
 
     public class Node{
         public int index;
@@ -29,7 +38,7 @@ public class Solution{
         return -((pCat1) * (Math.log(pCat1) / Math.log(2))) - ((pCat2) * (Math.log(pCat2) / Math.log(2)));
     }
 
-    
+
     public static int[] getBestSeparation(int[][] features, boolean[] labels){
         int[] answer = {0,0};
         double bestInfoGain = -1;
@@ -114,7 +123,36 @@ public class Solution{
         System.out.println(infoGain);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
+        List<List<String>> records = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("train.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(COMMA_DELIMITER);
+                records.add(Arrays.asList(values));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+        int[][] feautures = new int[records.size()][records.get(0).size() - 2];
+        boolean[] labels = new boolean[records.size()];
+        for(int i = 0; i < records.size(); i++)
+        {
+            for(int j = 0; j < records.get(i).size() - 2; j++)
+            {
+                feautures[i][j] = Integer.parseInt(records.get(i).get(j));
+            }
+
+            int num = Integer.parseInt(records.get(i).get(records.get(i).size() - 1));
+            if(num == 1)
+            {
+                labels[i] = true;
+            }
+            else
+            {
+                labels[i] = false;
+            }
+        }
     }
 }
