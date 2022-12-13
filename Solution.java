@@ -1,5 +1,7 @@
 public class Solution{
 
+    static final int MAX_DEPTH = 10;
+
     public class Node{
         public int index;
         public double threshold;
@@ -27,64 +29,15 @@ public class Solution{
         return -((pCat1) * (Math.log(pCat1) / Math.log(2))) - ((pCat2) * (Math.log(pCat2) / Math.log(2)));
     }
 
-    /*
-    public static double infoGain(int[] left, int leftSize, int[] right, int rightSize, int parentSize){
-        double lWeight = (double) leftSize / parentSize;
-        double rWeight = (double) rightSize / parentSize;
-
-        int lTrue = 0;
-        int lFalse = 0;
-        for(int i = 0; i < leftSize; i++)
-        {
-            if()
-        }
-    }
-*/
+    
     public static int[] getBestSeparation(int[][] features, boolean[] labels){
         int[] answer = {0,0};
-        double bestInfoGain = -99999999;
-        for(int i = 0; i < features.length; i++)
+        double bestInfoGain = -1;
+        for(int i = 0; i < features.length; i++) //sorok iteralasa := i
         {
-            for(int j = 0; j < features[i].length; j++)
+            for(int j = 0; j < features[i].length; j++) //oszlopok iteralasa := j
             {
-                int[] left = new int[features.length];
-                int leftSize = 0;
-                int leftTrue = 0;
-                int leftFalse = 0;
-
-                int[] right = new int[features.length];
-                int rightSize = 0;
-                int rightTrue = 0;
-                int rightFalse = 0;
-
-                for(int k = 0; k < features.length; k++) {
-                    //left
-                    if (features[k][j] < features[i][j]) {
-                        left[leftSize] = features[k][j];
-                        leftSize++;
-                        if (labels[k]) {
-                            leftTrue++;
-                        } else {
-                            leftFalse++;
-                        }
-                    }
-
-                    //right
-                    if (features[k][j] >= features[i][j]) {
-                        right[leftSize] = features[k][j];
-                        rightSize++;
-                        if (labels[k]) {
-                            rightTrue++;
-                        } else {
-                            rightFalse++;
-                        }
-                    }
-                }
-
-                if(rightSize == 0 && leftSize == 0)
-                    break;
-
-                double infoGain = getEntropy(leftFalse + rightFalse, leftTrue + rightTrue) - (getEntropy(leftTrue, leftFalse) * ((double)leftSize / (leftSize + rightSize)) + getEntropy(rightTrue, rightFalse) * ((double)rightSize / (rightSize + leftSize)));
+                double infoGain = informationGain(features, j, labels, features[i][j]);
                 if(infoGain > bestInfoGain)
                 {
                     bestInfoGain = infoGain;
@@ -92,12 +45,73 @@ public class Solution{
                 }
             }
         }
-
         return answer;
     }
 
-    public static void buildTree(int[][] dataset, int depth){
-        
+    public static double informationGain(int[][] data, int idx, boolean[] labels, int threshold){
+
+        int leftSize = 0;
+        int leftTrue = 0;
+        int leftFalse = 0;
+
+        int rightSize = 0;
+        int rightTrue = 0;
+        int rightFalse = 0;
+
+        for(int k = 0; k < data.length; k++) {
+            //left
+            if (data[k][idx] < threshold) {
+                leftSize++;
+                if (labels[k]) {
+                    leftTrue++;
+                } else {
+                    leftFalse++;
+                }
+            }
+
+            //right
+            if (data[k][idx] >= threshold) {
+                rightSize++;
+                if (labels[k]) {
+                    rightTrue++;
+                } else {
+                    rightFalse++;
+                }
+            }
+        }
+
+        double infoGain = getEntropy(leftFalse + rightFalse, leftTrue + rightTrue) - (getEntropy(leftTrue, leftFalse) * ((double)leftSize / (leftSize + rightSize)) + getEntropy(rightTrue, rightFalse) * ((double)rightSize / (rightSize + leftSize)));
+
+        if(rightSize == 0 && leftSize == 0)
+            infoGain = 0;
+
+        return infoGain;
+    }
+/*
+    public static Node buildTree(int[][] dataset, int depth){
+        if(depth >= MAX_DEPTH)
+        {
+
+        }
+
+
+    }
+*/
+    public void infoGainTest(){
+        int leftFalse = 498;
+        int leftTrue = 498;
+        int leftSize = 996;
+
+        int rightFalse = 492;
+        int rightTrue = 572;
+        int rightSize = 1064;
+
+        double parentGain = getEntropy(leftFalse + rightFalse, leftTrue + rightTrue);
+        double childGain = (getEntropy(leftTrue, leftFalse) * ((double)leftSize / (leftSize + rightSize)) + getEntropy(rightTrue, rightFalse) * ((double)rightSize / (rightSize + leftSize)));
+        double infoGain = parentGain - childGain;
+        System.out.println(parentGain);
+        System.out.println(childGain);
+        System.out.println(infoGain);
     }
 
     public static void main(String[] args){
